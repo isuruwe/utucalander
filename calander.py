@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 
 calendar_file = 'calendar.json'
 
@@ -8,6 +8,9 @@ def load_calendar():
         with open(calendar_file, 'r') as file:
             return json.load(file)
     except FileNotFoundError:
+        # Create the file if it does not exist and return an empty dictionary
+        with open(calendar_file, 'w') as file:
+            json.dump({}, file)
         return {}
 
 def save_calendar(calendar):
@@ -19,7 +22,9 @@ def display_calendar(year, month):
     for day in range(1, 32):
         try:
             date = datetime(year, month, day)
-            print(f"{day:02}: {calendar.get(date.strftime('%Y-%m-%d'), '')}")
+            date_str = date.strftime('%Y-%m-%d')
+            reminders = calendar.get(date_str, '')
+            print(f"{day:02}: {reminders}")
         except ValueError:
             break
 
